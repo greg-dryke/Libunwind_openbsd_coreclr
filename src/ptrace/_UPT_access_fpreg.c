@@ -26,6 +26,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 
 #include "_UPT_internal.h"
 
+// IF OPEN BSD
+#include "reg.h"
+typedef struct fpreg fpregset_t;
+
 #if HAVE_DECL_PTRACE_POKEUSER || HAVE_TTRACE
 int
 _UPT_access_fpreg (unw_addr_space_t as, unw_regnum_t reg, unw_fpreg_t *val,

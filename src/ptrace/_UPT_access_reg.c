@@ -34,6 +34,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 # include "tdep-ia64/rse.h"
 #endif
 
+#include "reg.h"
+typedef struct reg gregset_t;
+
 #if HAVE_DECL_PTRACE_POKEUSER || HAVE_TTRACE
 int
 _UPT_access_reg (unw_addr_space_t as, unw_regnum_t reg, unw_word_t *val,

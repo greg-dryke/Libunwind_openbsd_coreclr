@@ -34,7 +34,8 @@ extern "C" {
 
 #include <sys/types.h>
 #include <inttypes.h>
-#include <ucontext.h>
+// Need IFDEF OpenBSD
+#include <signal.h>
 
 #define UNW_TARGET              x86_64
 #define UNW_TARGET_X86_64       1

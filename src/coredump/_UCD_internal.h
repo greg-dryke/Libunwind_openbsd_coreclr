@@ -74,12 +74,37 @@ struct coredump_phdr
 
 typedef struct coredump_phdr coredump_phdr_t;
 
+#if __OpenBSD__
+
+// TODO This probably needs a lot of ARCH info?
+typedef int greg_t;
+#define NGREG 18
+typedef greg_t gregset_t[NGREG];
+
+typedef struct prstatus {
+            int         pr_version;     /* Version number of struct (1) */
+               size_t      pr_statussz;    /* sizeof(prstatus_t) (1) */
+                  size_t      pr_gregsetsz;   /* sizeof(gregset_t) (1) */
+                     size_t      pr_fpregsetsz;  /* sizeof(fpregset_t) (1) */
+                        int         pr_osreldate;   /* Kernel version (1) */
+                           int         pr_cursig;      /* Current signal (1) */
+                              pid_t       pr_pid;         /* Process ID (1) */
+                                 gregset_t   pr_reg;         /* General purpose registers (1) */
+                                };
+
+#define PRSTATUS_STRUCT prstatus
+
+
+
+#else
+
 #if defined(HAVE_STRUCT_ELF_PRSTATUS)
 #define PRSTATUS_STRUCT elf_prstatus
 #elif defined(HAVE_STRUCT_PRSTATUS)
 #define PRSTATUS_STRUCT prstatus
 #else
 #define PRSTATUS_STRUCT non_existent
+#endif
 #endif
 
 struct UCD_info

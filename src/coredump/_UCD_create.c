@@ -60,8 +60,39 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 # error "Can't determine endianness"
 #endif
 
+#if __OpenBSD__
+
+typedef struct elfcore_procinfo elfcore_procinfo;
+//typedef __uint32_t uint32_t;
+#include <sys/_types.h>
+typedef __uint32_t uint32_t;
+typedef __int32_t int32_t;
+typedef __int8_t int8_t;
+//#include <elf_abi.h>
+#include <sys/param.h>
+#include <sys/proc.h>
+#include <sys/exec_elf.h>
+// HACK
+typedef struct elf32_note {
+      Elf_Word    n_namesz;   /* Name size */
+        Elf_Word  n_descsz;   /* Content size */
+          Elf_Word    n_type;     /* Content type */
+} Elf32_Nhdr;
+/* Note header in a PT_NOTE section */
+typedef struct elf64_note {
+      Elf_Word n_namesz;  /* Name size */
+        Elf_Word n_descsz;    /* Content size */
+          Elf_Word n_type;    /* Content type */
+} Elf64_Nhdr;
+
+#define NT_PRSTATUS 1
+
+#else
+
 #include <elf.h>
 #include <sys/procfs.h> /* struct elf_prstatus */
+
+#endif
 
 #include "_UCD_lib.h"
 #include "_UCD_internal.h"
@@ -157,7 +188,7 @@ _UCD_create(const char *filename)
       unsigned i = 0;
       while (i < size)
         {
-          Elf64_Phdr hdr64;
+          Elf_Phdr hdr64;
           if (read(fd, &hdr64, sizeof(hdr64)) != sizeof(hdr64))
             {
               Debug(0, "Can't read phdrs from '%s'\n", filename);
@@ -183,7 +214,8 @@ _UCD_create(const char *filename)
       unsigned i = 0;
       while (i < size)
         {
-          Elf32_Phdr hdr32;
+              // TODO, conditional this? Should still be Elf32_Nhdr for others
+          Elf_Phdr hdr32;
           if (read(fd, &hdr32, sizeof(hdr32)) != sizeof(hdr32))
             {
               Debug(0, "Can't read phdrs from '%s'\n", filename);
@@ -212,6 +244,7 @@ _UCD_create(const char *filename)
         Debug(2, "phdr[%03d]: type:%d", i, cur->p_type);
         if (cur->p_type == PT_NOTE)
           {
+              // TODO, conditional this? Should still be Elf32_Nhdr for others
             Elf32_Nhdr *note_hdr, *note_end;
             unsigned n_threads;
 
@@ -227,6 +260,7 @@ _UCD_create(const char *filename)
 
             /* Count number of threads */
             n_threads = 0;
+              // TODO, conditional this? Should still be Elf32_Nhdr for others
             note_hdr = (Elf32_Nhdr *)ui->note_phdr;
             while (NOTE_FITS (note_hdr, note_end))
               {
@@ -240,7 +274,8 @@ _UCD_create(const char *filename)
             ui->threads = malloc(sizeof (void *) * n_threads);
 
             n_threads = 0;
-            note_hdr = (Elf32_Nhdr *)ui->note_phdr;
+              // TODO, conditional this? Should still be Elf32_Nhdr for others
+            note_hdr = (Elf64_Nhdr *)ui->note_phdr;
             while (NOTE_FITS (note_hdr, note_end))
               {
                 if (note_hdr->n_type == NT_PRSTATUS)

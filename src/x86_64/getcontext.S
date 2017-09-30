@@ -77,6 +77,20 @@ _Ux86_64_getcontext:
 	movl $0, UC_MCONTEXT_FLAGS(%rdi)
 	movw %cs, UC_MCONTEXT_CS(%rdi)
 	movw %ss, UC_MCONTEXT_SS(%rdi)
+    // TODO Port THIS CORRECTLY
+#elif defined __OpenBSD__
+	fxsave UC_MCONTEXT_FPSTATE(%rdi)
+	movq $UC_MCONTEXT_FPOWNED_FPU,UC_MCONTEXT_OWNEDFP(%rdi)
+	movq $UC_MCONTEXT_FPFMT_XMM,UC_MCONTEXT_FPFORMAT(%rdi)
+	/* Save rflags and segment registers, so that sigreturn(2)
+	does not complain. */
+	pushfq
+	.cfi_adjust_cfa_offset 8
+	popq UC_MCONTEXT_RFLAGS(%rdi)
+	.cfi_adjust_cfa_offset -8
+	movl $0, UC_MCONTEXT_FLAGS(%rdi)
+	movw %cs, UC_MCONTEXT_CS(%rdi)
+	movw %ss, UC_MCONTEXT_SS(%rdi)
 #if 0
 	/* Setting the flags to 0 above disables restore of segment
 	   registers from the context */

@@ -333,6 +333,28 @@ const int _UPT_reg_offset[UNW_REG_LAST + 1] =
 //  [UNW_X86_64_EFLAGS] = 0x90,
 //  [UNW_X86_64_RSP]    = 0x98,
 //  [UNW_X86_64_SS]     = 0xa0
+#elif defined __OpenBSD__
+    [UNW_X86_64_RAX]    = 0x50,
+    [UNW_X86_64_RDX]    = 0x60,
+    [UNW_X86_64_RCX]    = 0x58,
+    [UNW_X86_64_RBX]    = 0x28,
+    [UNW_X86_64_RSI]    = 0x68,
+    [UNW_X86_64_RDI]    = 0x70,
+    [UNW_X86_64_RBP]    = 0x20,
+    [UNW_X86_64_RSP]    = 0x98,
+    [UNW_X86_64_R8]     = 0x48,
+    [UNW_X86_64_R9]     = 0x40,
+    [UNW_X86_64_R10]    = 0x38,
+    [UNW_X86_64_R11]    = 0x30,
+    [UNW_X86_64_R12]    = 0x18,
+    [UNW_X86_64_R13]    = 0x10,
+    [UNW_X86_64_R14]    = 0x08,
+    [UNW_X86_64_R15]    = 0x00,
+    [UNW_X86_64_RIP]    = 0x80
+//  [UNW_X86_64_CS]     = 0x88,
+//  [UNW_X86_64_EFLAGS] = 0x90,
+//  [UNW_X86_64_RSP]    = 0x98,
+//  [UNW_X86_64_SS]     = 0xa0
 #else
 #error Port me
 #endif

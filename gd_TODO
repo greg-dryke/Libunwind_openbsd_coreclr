@@ -1,0 +1,13 @@
+
+NEW
+Get make finished, jsut tests
+Install of includes as well, hacked them all into usr/include with cp currently
+
+
+OLD
+
+continue to copy over the missing declarations from /usr/include/sys/exec_elf.h (or whereever they live ultimately)
+
+Things like NT_PRSTATUS
+
+this is not a long term solutions, proper IF DEFs and other includes should be put in place.

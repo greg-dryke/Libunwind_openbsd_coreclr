@@ -21,7 +21,15 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 
+#if __OpenBSD__
+#include <sys/_types.h>
+typedef __uint32_t uint32_t;
+typedef __int32_t int32_t;
+typedef __int8_t int8_t;
+#include <sys/exec_elf.h>
+#else
 #include <elf.h>
+#endif
 
 #include "_UCD_lib.h"
 #include "_UCD_internal.h"

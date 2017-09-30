@@ -78,6 +78,25 @@ _Ux86_64_setcontext:
 	jne 1f
 	fxrstor UC_MCONTEXT_FPSTATE(%rdi)
 1:
+#elif defined __OpenBSD__
+// TODO Actually port this...
+	/* restore signal mask */
+	pushq	%rdi
+	xorl	%edx,%edx
+	leaq	UC_SIGMASK(%rdi),%rsi
+	movl	$3,%edi/* SIG_SETMASK */
+	movl	$SYS_sigprocmask,%eax
+	movq	%rcx,%r10
+	syscall
+	popq	%rdi
+
+	/* restore fp state */
+	cmpq $UC_MCONTEXT_FPOWNED_FPU,UC_MCONTEXT_OWNEDFP(%rdi)
+	jne 1f
+	cmpq $UC_MCONTEXT_FPFMT_XMM,UC_MCONTEXT_FPFORMAT(%rdi)
+	jne 1f
+	fxrstor UC_MCONTEXT_FPSTATE(%rdi)
+1:
 #else
 #error Port me
 #endif

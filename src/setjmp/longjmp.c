@@ -23,6 +23,14 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  */
 
+/*#if __OpenBSD__
+#include <machine/setjmp.h>
+// TODO Probably another file to just include
+// TODO if not, arch
+#define JB_RP _JB_RSP
+
+#endif */
+
 #define UNW_LOCAL_ONLY
 
 #undef _FORTIFY_SOURCE
